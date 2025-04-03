@@ -1,0 +1,139 @@
+.welcome {
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  
+  .logo {
+    width: 120px;
+    height: auto;
+  }
+  
+  .login-btn {
+    background: black;
+    color: white;
+    padding: 10px 16px;
+    font-size: 13px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .hero {
+    padding: 60px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .hero-text h1 {
+    font-size: 34px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .hero-text p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .learn-more {
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .specialists {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 50px 0;
+  }
+  
+  .card {
+    text-align: center;
+    width: 200px;
+  }
+  
+  .card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .appointment {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .book-btn {
+    background: black;
+    color: white;
+    padding: 12px 25px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  
+  .welcome-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    background: #f8f8f8;
+    font-size: 14px;
+  }
+  
+  .welcome-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .specialist-cards {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    margin-top: 32px;
+  }
+  
+  .specialist-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 250px;
+    cursor: pointer;
+  }
+  
+  .specialist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  
+  .specialist-card img {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .specialist-card p {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+  }
+  
+  .specialist-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  
+  

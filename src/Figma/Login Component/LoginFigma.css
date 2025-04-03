@@ -1,0 +1,133 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff;
+  }
+  
+  .page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .navbar .logo {
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+  
+  .navbar nav a {
+    margin: 0 12px;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+  }
+  
+  .assessment-button {
+    background: black;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .login-wrapper {
+    max-width: 400px;
+    margin: auto; /* centers vertically + horizontally */
+    padding: 40px;
+    text-align: center;
+    background-color: white;
+  }
+  
+  .login-wrapper h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .greeting {
+    font-size: 14px;
+    margin-bottom: 25px;
+    color: #444;
+  }
+  
+  
+  .login-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    background-color: #f2f7f5;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .register-button {
+    width: 100%;
+    padding: 12px;
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .or-divider {
+    margin: 20px 0 10px;
+    font-size: 13px;
+    color: #888;
+  }
+  
+  .google-btn {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  
+  .google-btn img {
+    width: 20px;
+  }
+  
+  .footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 40px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+  }
+  
+  .footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer li {
+    margin-bottom: 5px;
+  }
