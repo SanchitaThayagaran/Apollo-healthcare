@@ -1,0 +1,147 @@
+.medications-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .medications-container h1 {
+    font-size: 32px;
+    margin-bottom: 24px;
+    font-weight: bold;
+  }
+  
+  .add-med-btn {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 30px;
+  }
+  
+  .add-med-btn:hover {
+    opacity: 0.9;
+  }
+  
+  .medication-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  
+  .med-card {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    width: 280px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .med-card h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  .med-card p {
+    font-size: 14px;
+    margin: 4px 0;
+    color: #333;
+  }
+  
+  .med-card p strong {
+    color: #000;
+  }
+  
+  .card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+  
+  .card-actions button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #f4f4f4;
+    transition: background-color 0.3s;
+  }
+  
+  .card-actions button:hover {
+    background-color: #ddd;
+  }
+  
+  .card-actions .delete-btn {
+    background-color: #ffe0e0;
+  }
+  
+  .card-actions .delete-btn:hover {
+    background-color: #ffcccc;
+  }
+  
+  .form-modal {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .form-modal input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .form-modal button {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  
+  .form-modal button:first-of-type {
+    background-color: #0077cc;
+    color: white;
+  }
+  
+  .form-modal .cancel-btn {
+    background-color: #ddd;
+    color: black;
+  }
+  .med-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.12);
+  }
+  .medication-grid {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 32px;
+  }
+  .med-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    align-self: center;
+  }
+  
+  
