@@ -1,0 +1,283 @@
+.section-title {
+    padding: 40px;
+    font-size: 32px;
+    font-weight: bold;
+  }
+  
+  .doctor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px 40px;
+  }
+  
+  .doctor-card {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .doctor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .doctor-card.selected {
+    border: 2px solid #4ade80; /* Tailwind green-400 */
+    background-color: #f0fdf4;
+  }
+  
+  .doctor-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .doc-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+  }
+  
+  .doc-info strong {
+    font-size: 14px;
+  }
+  
+  .rating {
+    position: absolute;
+    top: 10px;
+    right: 45px;
+    font-size: 13px;
+    color: #ffa500;
+    font-weight: bold;
+  }
+  
+  .arrow {
+    position: absolute;
+    right: 16px;
+    bottom: 12px;
+    font-size: 18px;
+  }
+  
+  .selected-doctor {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-weight: bold;
+    font-size: 18px;
+    background: #0a0a0a;
+    color: white;
+    padding: 16px 0;
+    border-radius: 10px;
+  }
+  
+  .calendar-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px 0 60px;  /* ⬅ increased bottom margin */
+  }
+  
+  
+  .sub-heading {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 40px;
+  }
+  
+  .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  
+  
+  .time {
+    padding: 10px 20px;
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .time.selected {
+    background: #90ee90;
+    font-weight: bold;
+    border-color: #8bc34a;
+  }
+  
+  .confirm-button {
+    display: block;
+    margin: 30px auto;
+    padding: 16px 40px;
+    font-size: 18px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .footer {
+    margin-top: 60px;
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    font-size: 14px;
+    background: #f8f8f8;
+  }
+  
+  .footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .success-notification {
+    text-align: center;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px 24px;
+    border-radius: 8px;
+    margin: 20px auto;
+    width: fit-content;
+    font-weight: bold;
+    animation: fadeOut 3s forwards;
+  }
+  
+  /* Optional fade-out animation */
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  /* 📅 Custom React Datepicker styling */
+  .react-datepicker {
+    border-radius: 16px; /* More rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Softer, bigger shadow */
+    padding: 20px 24px;
+    background-color: #ffffff;
+    border: none;
+  }
+  
+  
+  .react-datepicker__header {
+    background-color: #fff;
+    border-bottom: none;
+    padding-top: 16px;
+  }
+  
+  .react-datepicker__current-month {
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+  }
+  
+  .react-datepicker__day-name,
+  .react-datepicker__day {
+    font-size: 14px;
+    margin: 0.3rem;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 50%;
+    text-align: center;
+  }
+  
+  .react-datepicker__day--selected,
+  .react-datepicker__day--keyboard-selected {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .react-datepicker__day:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .react-datepicker__navigation-icon::before {
+    border-color: black;
+    border-width: 2px 2px 0 0;
+    height: 10px;
+    width: 10px;
+  }
+  
+  
+  .calendar-picker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  .react-datepicker__day {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .calendar-picker h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .doctor-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    padding: 16px 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .doctor-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  .doctor-card.selected {
+    border: 2px solid #4ade80;
+    background-color: #f0fdf4;
+  }
+  
+  .doctor-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  
+  .doc-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 14px;
+    flex-grow: 1;
+  }
+  
+  .doc-info strong {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  .doc-info span {
+    margin: 1px 0;
+    color: #555;
+  }
+  
+  .rating {
+    font-size: 10px;
+    color: #f59e0b;
+    font-weight: bold;
+    align-items: baseline;
+  }
+  
+  .arrow {
+    font-size: 18px;
+    border-radius: 0%;
+    padding: px 10px;
+  }
+  
