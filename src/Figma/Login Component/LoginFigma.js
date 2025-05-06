@@ -1,35 +1,63 @@
-import { Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import React from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './LoginFigma.css';
 import '../header.css'; // Adjust path if needed
 import Header from '../header';
 
 function LoginPage() {
+  const navigate = useNavigate();
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const token = credentialResponse.credential;
+
+      // Send token to Django backend to verify and fetch role
+      const response = await axios.post('http://localhost:8000/api/accounts/google-login/', {
+        token: token,
+      });
+
+      // Save access/refresh tokens in localStorage
+      localStorage.setItem('access', response.data.access);
+      localStorage.setItem('refresh', response.data.refresh);
+
+      // Check user role and redirect to appropriate page
+      if (response.data.role === 'doctor') {
+        navigate('/appointments'); // Redirect to doctor dashboard
+      } else {
+        navigate('/medications'); // Redirect to patient dashboard
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('Google login failed. Please try again.');
+    }
+  };
+
   return (
-    
     <div className="page-container">
       {/* NAVBAR */}
-      
       <Header />
 
       {/* LOGIN BOX */}
       <main className="login-wrapper">
         <h1>LOGIN</h1>
         <p className="greeting">Welcome! Glad to see you.</p>
-        <form className="login-form">
-          <input type="text" placeholder="USERNAME" />
-          <input type="email" placeholder="EMAIL" />
-          <input type="password" placeholder="PASSWORD" />
-          <input type="password" placeholder="CONFIRM PASSWORD" />
-          <button type="submit" className="register-button">Agree and Register</button>
-        </form>
+
         <div className="or-divider">
           <span>Or login with</span>
         </div>
+
+        {/* Google Login */}
         <div className="google-signin">
-          <button className="google-btn">
-            <img src="google.png" alt="Google Login" />
-          </button>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              console.log('Google Login Failed');
+              alert('Google login failed.');
+            }}
+            useOneTap
+          />
         </div>
       </main>
 
