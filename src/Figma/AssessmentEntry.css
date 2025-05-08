@@ -1,0 +1,64 @@
+.assessment-entry-page {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: #fff;
+  padding: 40px 0 0 0;
+}
+
+.assessment-entry-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 36px;
+  text-align: center;
+}
+
+.assessment-cards-row {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.assessment-card {
+  background: #f8fafb;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 28px 22px;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.assessment-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+  transform: translateY(-4px);
+}
+.assessment-card h3 {
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.assessment-card p {
+  font-size: 1rem;
+  color: #444;
+  margin: 12px 0 18px 0;
+}
+.assessment-card button {
+  background: #0077cc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  align-self: flex-end;
+}
+.assessment-card button:hover {
+  background: #005fa3;
+} 
