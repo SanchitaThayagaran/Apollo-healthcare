@@ -224,7 +224,7 @@ export default function DiabetesRiskForm() {
                   <p>This is a comparison with the risk for a person of the same age and sex with no risk factors and a body mass index of {calculateBMI()}.</p>
                   <p><b>Heart Age:</b> {result.heartAge}</p>
 
-                  <p>In other words, in a crowd of 100 people with the same risk factors as you, {Math.round(result.riskScore * 100)} are likely to develop heart attack or stroke within the next 10 years.</p>
+                  <p>In other words, in a crowd of 100 people with the same risk factors as you, {Math.round(result.riskScore)} are likely to develop diabetes within the next 10 years.</p>
                 </div>
               ) : (
                 <div style={{ color: 'red' }}>
