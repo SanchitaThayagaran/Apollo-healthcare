@@ -73,6 +73,7 @@ class RiskPredictionView(APIView):
                 result = {
                     'riskScore': None,
                     'heartAge': None,
+                    'typicalScore': None,
                     'calculationMeta': None,
                     'message': None
                 }
@@ -82,8 +83,9 @@ class RiskPredictionView(APIView):
                         qrisk = engine_results[0]
                         # Find risk score and heart age
                         for r in qrisk.get('results', []):
-                            if r.get('id', '').endswith('Qrisk3'):
+                            if r.get('id', '').endswith('Qrisk3') or r.get('id', '').endswith('QDiabetes'):
                                 result['riskScore'] = r.get('score')
+                                result['typicalScore'] = r.get('typicalScore')
                             if r.get('id', '').endswith('Qrisk3HeartAge'):
                                 result['heartAge'] = r.get('score')
                         # Calculation meta

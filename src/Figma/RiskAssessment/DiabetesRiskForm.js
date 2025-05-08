@@ -58,7 +58,7 @@ export default function DiabetesRiskForm() {
     setLoading(true);
 
     // Build payload with only updated fields
-    const payload = { requestedEngines: ["QRisk3"] };
+    const payload = { requestedEngines: ["QDiabetes"] };
     if (sex) payload.sex = sex;
     if (age) payload.age = Number(age);
     const bmi = calculateBMI();
@@ -79,11 +79,17 @@ export default function DiabetesRiskForm() {
     if (hba1c) payload.hba1c = Number(hba1c);
 
     try {
-      const response = await fetch("/api/diabetes-risk", {
+      const response = await fetch("http://localhost:8000/api/risk/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+      if (!response.ok) {
+        const errData = await response.json();
+        setResult({ error: errData.error || "Failed to get risk score" });
+        setLoading(false);
+        return;
+      }
       const data = await response.json();
       setResult(data);
     } catch (err) {
@@ -207,8 +213,29 @@ export default function DiabetesRiskForm() {
           </div>
           <div className="risk-result-body">
             {loading && <p>Calculating risk...</p>}
-            {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
-            {!loading && !result && <p>Please complete all Required fields. Results will appear here.</p>}
+            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {result && !result.error && (
+              result.calculationMeta && result.calculationMeta.engineResultStatus === "CALCULATED_USING_ESTIMATED_OR_CORRECTED_DATA" ? (
+                <div>
+                  <p><b>Absolute risk:</b> {(result.riskScore).toFixed(1)}%</p>
+                  {result.typicalScore !== undefined && (
+                    <p><b>Absolute risk with no risk factors:</b> {(result.typicalScore).toFixed(1)}%</p>
+                  )}
+                  <p>This is a comparison with the risk for a person of the same age and sex with no risk factors and a body mass index of {calculateBMI()}.</p>
+                  <p><b>Heart Age:</b> {result.heartAge}</p>
+
+                  <p>In other words, in a crowd of 100 people with the same risk factors as you, {Math.round(result.riskScore * 100)} are likely to develop heart attack or stroke within the next 10 years.</p>
+                </div>
+              ) : (
+                <div style={{ color: 'red' }}>
+                  <b>Calculation failed:</b> {result.calculationMeta && result.calculationMeta.engineResultStatusReason ? result.calculationMeta.engineResultStatusReason : result.message || "Unknown reason"}
+                </div>
+              )
+            )}
+            {result && result.error && (
+              <div style={{ color: 'red' }}>{result.error}</div>
+            )}
+            {!loading && !result && !error && <p>Please complete all Required fields. Results will appear here.</p>}
           </div>
         </div>
       </div>
