@@ -1,9 +1,10 @@
 // src/components/Header.js
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './header.css'; // This points to your existing styles
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <header className="header">
       <Link to="/" className="apollo-brand">
@@ -17,7 +18,7 @@ function Header() {
         <NavLink to="/profile" className={({ isActive }) => isActive ? "active" : ""}>PROFILE</NavLink>
       </nav>
 
-      <button className="assessment-button">TAKE ASSESSMENT</button>
+      <button className="assessment-button" onClick={() => navigate('/assessment-entry')}>TAKE ASSESSMENT</button>
     </header>
   );
 }
