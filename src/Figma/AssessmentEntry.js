@@ -3,6 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./AssessmentEntry.css";
 import Header from "./header";
+
 export default function AssessmentEntry() {
   const navigate = useNavigate();
 
@@ -25,7 +26,7 @@ export default function AssessmentEntry() {
             As a patient, complete a self-assessment questionnaire to check for potential health issues based on your symptoms. The system analyzes your responses and provides preliminary insights, suggesting whether you should seek medical attention. If your symptoms indicate urgency, you'll receive recommendations for booking an appointment with a healthcare provider.<br /><br />
             As a healthcare provider, review patient self-assessment results to better understand their concerns before a consultation.
           </p>
-          <button /* onClick={...} */>Take Assessment</button>
+          <button onClick={() => navigate('/self-assessment')}>Take Assessment</button>
         </div>
       </div>
     </div>
