@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../header";
 import "./RiskAssessment.css";
 
-export default function HeartAttackRiskForm() {
+export default function HeartAttackRiskForm({ onBack, initialAge, initialGender }) {
   // State for all fields
-  const [sex, setSex] = useState("");
-  const [age, setAge] = useState("");
+  const [sex, setSex] = useState(initialGender || "");
+  const [age, setAge] = useState(initialAge || "");
   const [diabetesStatus, setDiabetesStatus] = useState("None");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
@@ -29,6 +29,12 @@ export default function HeartAttackRiskForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+
+  // Update state if props change
+  useEffect(() => {
+    if (initialGender) setSex(initialGender);
+    if (initialAge) setAge(initialAge);
+  }, [initialGender, initialAge]);
 
   // Helper to calculate BMI
   const calculateBMI = () => {
@@ -114,7 +120,10 @@ export default function HeartAttackRiskForm() {
       <h1 style={{ textAlign: 'center', marginTop: '20px' }}>CardioVascular Risk Assessment</h1>
       <div className="risk-form-wrapper">
         <form className="risk-form-section" onSubmit={handleSubmit}>
-          <h2>Personal Information</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h2 style={{ margin: 0 }}>Personal Information</h2>
+            <div style={{ width: '130px' }}></div> {/* Spacer for alignment */}
+          </div>
           <div className="form-row">
             <div className="form-group">
               <label>Biological Sex <span style={{color: 'red'}}>*</span></label>
