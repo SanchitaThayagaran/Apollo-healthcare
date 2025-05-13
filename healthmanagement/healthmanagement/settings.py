@@ -9,6 +9,15 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import environ
+env = environ.Env()
+environ.Env.read_env()  # Reads the .env file
+
+AWS_ACCESS_KEY_ID     = env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+AWS_REGION            = env("AWS_REGION")
+SNS_REMINDER_TOPIC_ARN= env("SNS_REMINDER_TOPIC_ARN")
+
 
 from pathlib import Path
 from datetime import timedelta
@@ -42,6 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'appointments',
 ]
 
 MIDDLEWARE = [
