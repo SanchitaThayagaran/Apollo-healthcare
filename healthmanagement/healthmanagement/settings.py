@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-AWS_ACCESS_KEY_ID     = "AKIA6DZFBJ27ZECBYBTB"
-AWS_SECRET_ACCESS_KEY = "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"
-AWS_REGION            = "us-east-1"
-SNS_REMINDER_TOPIC_ARN= "arn:aws:sns:us-east-1:970203418303:AppointmentReminders"
+# AWS_ACCESS_KEY_ID     = "AKIA6DZFBJ27ZECBYBTB"
+# AWS_SECRET_ACCESS_KEY = "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"
+# AWS_REGION            = "us-east-1"
+# SNS_REMINDER_TOPIC_ARN= "arn:aws:sns:us-east-1:970203418303:AppointmentReminders"
 
 
 from pathlib import Path
