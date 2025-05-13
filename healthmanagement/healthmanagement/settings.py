@@ -9,14 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import environ
-env = environ.Env()
-environ.Env.read_env()  # Reads the .env file
-
-AWS_ACCESS_KEY_ID     = env("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
-AWS_REGION            = env("AWS_REGION")
-SNS_REMINDER_TOPIC_ARN= env("SNS_REMINDER_TOPIC_ARN")
+AWS_ACCESS_KEY_ID     = "AKIA6DZFBJ27ZECBYBTB"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_REGION            = "us-east-1"
+SNS_REMINDER_TOPIC_ARN= "arn:aws:sns:us-east-1:970203418303:AppointmentReminders"
 
 
 from pathlib import Path
