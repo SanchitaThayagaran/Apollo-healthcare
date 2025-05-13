@@ -21,6 +21,8 @@ function LoginPage() {
       // Save access/refresh tokens in localStorage
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
+      localStorage.setItem('user_id', response.data.user_id);
+
       localStorage.setItem('role', response.data.role); // 'doctor' or 'patient'
       localStorage.setItem('email', response.data.email);
       localStorage.setItem('user_id', response.data.user_id);
