@@ -8,7 +8,9 @@ import AppointmentPage from './Figma/Appointment Component/Appointment';
 import MedicationsPage from './Figma/Medications Component/Medication';
 import RiskAssessmentPage from './Figma/RiskAssessment/RiskAssessment';
 import AssessmentEntry from './Figma/AssessmentEntry';
+import SelfAssessmentForm from './Figma/SelfAssessment/SelfAssessmentForm';
 import ProfilePage from './Figma/Profile Component/Profile';
+import SelfAssessmentResult from './Figma/SelfAssessment/SelfAssessmentResult';
 import AppointmentList from './Figma/Appointment List Component/AppointmentList';
 
 function App() {
@@ -22,8 +24,10 @@ function App() {
           <Route path="/medications" element={<MedicationsPage />} />
           <Route path="/risk-assessment" element={<RiskAssessmentPage />} />
           <Route path="/assessment-entry" element={<AssessmentEntry />} />
+          <Route path="/self-assessment" element={<SelfAssessmentForm />} />
           <Route path="/filterappointment" element={<AppointmentList />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/self-assessment-result" element={<SelfAssessmentResult />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
