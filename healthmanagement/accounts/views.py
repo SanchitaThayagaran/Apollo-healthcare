@@ -3,8 +3,11 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import CustomUser
+from .models import CustomUser, PatientProfile
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import permission_classes
 
 class GoogleLoginView(APIView):
     def post(self, request):
@@ -42,6 +45,12 @@ class GoogleLoginView(APIView):
             user.role = role
             user.save()
 
+        # Create PatientProfile if user is a patient and doesn't have a profile yet
+        if user.role == 'patient':
+            PatientProfile.objects.get_or_create(user=user)
+
+        print(user.id, user.email, user.role)
+
         # Step 6: Issue JWT tokens for the user
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
@@ -51,60 +60,59 @@ class GoogleLoginView(APIView):
         return Response({
             'access': access_token,
             'refresh': refresh_token,
-            'role': user.role
+            'role': user.role,
+            'user_id': user.id
         }, status=status.HTTP_200_OK)
 
 
-class RiskPredictionView(APIView):
-    def post(self, request):
-        external_url = 'https://api.endeavourpredict.org/dev/epredict/Prediction'
-        api_key = '90a3763f-4ffb-41eb-bee2-369ed972c1a0'
-        payload = request.data
-        headers = {
-            'accept': 'application/json',
-            'X-Gravitee-Api-Key': api_key,
-            'Content-Type': 'application/json',
+class PatientProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, user_id):
+        # Check permissions - users can only view their own profile or doctors can view any
+        if str(request.user.id) != user_id and request.user.role != 'doctor':
+            return Response({"error": "You don't have permission to view this profile."}, 
+                            status=status.HTTP_403_FORBIDDEN)
+            
+        # Get the profile or return 404
+        profile = get_object_or_404(PatientProfile, user_id=user_id)
+        
+        # Return the profile data
+        data = {
+            'user_id': profile.user_id,
+            'date_of_birth': profile.date_of_birth,
+            'gender': profile.gender,
+            'insurance_provider': profile.insurance_provider
         }
-        try:
-            response = requests.post(external_url, json=payload, headers=headers, timeout=15)
-            if response.status_code == 200:
-                data = response.json()
-                # Parse important fields
-                result = {
-                    'riskScore': None,
-                    'heartAge': None,
-                    'typicalScore': None,
-                    'calculationMeta': None,
-                    'message': None
-                }
-                try:
-                    engine_results = data.get('engineResults', [])
-                    if engine_results:
-                        qrisk = engine_results[0]
-                        # Find risk score and heart age
-                        for r in qrisk.get('results', []):
-                            if r.get('id', '').endswith('Qrisk3') or r.get('id', '').endswith('QDiabetes'):
-                                result['riskScore'] = r.get('score')
-                                result['typicalScore'] = r.get('typicalScore')
-                            if r.get('id', '').endswith('Qrisk3HeartAge'):
-                                result['heartAge'] = r.get('score')
-                        # Calculation meta
-                        meta = qrisk.get('calculationMeta', {})
-                        result['calculationMeta'] = {
-                            'engineResultStatus': meta.get('engineResultStatus'),
-                            'engineResultStatusReason': meta.get('engineResultStatusReason')
-                        }
-                        # Message
-                        if qrisk.get('results') and len(qrisk['results']) > 0:
-                            result['message'] = qrisk['results'][0].get('message')
-                except Exception as e:
-                    result['message'] = f'Error parsing response: {str(e)}'
-                return Response(result, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    'error': 'External API error',
-                    'status_code': response.status_code,
-                    'details': response.text
-                }, status=status.HTTP_502_BAD_GATEWAY)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response(data, status=status.HTTP_200_OK)
+    
+    def put(self, request, user_id):
+        # Check permissions - users can only update their own profile
+        if str(request.user.id) != user_id:
+            return Response({"error": "You don't have permission to update this profile."}, 
+                            status=status.HTTP_403_FORBIDDEN)
+            
+        # Get the profile
+        profile = get_object_or_404(PatientProfile, user_id=user_id)
+        
+        # Update the profile with the request data
+        if 'date_of_birth' in request.data:
+            profile.date_of_birth = request.data.get('date_of_birth')
+        if 'gender' in request.data:
+            profile.gender = request.data.get('gender')
+        if 'insurance_provider' in request.data:
+            profile.insurance_provider = request.data.get('insurance_provider')
+            
+        # Save the changes
+        profile.save()
+        
+        # Return the updated profile
+        data = {
+            'user_id': profile.user_id,
+            'date_of_birth': profile.date_of_birth,
+            'gender': profile.gender,
+            'insurance_provider': profile.insurance_provider
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)

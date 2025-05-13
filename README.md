@@ -10,7 +10,7 @@ The Healthcare Management System (HMS) is designed to digitize patient records a
 ## Prerequisites
 - Python 3.11+
 - pip
-- PostgreSQL (for production; SQLite can be used for local testing)
+- PostgreSQL 
 
 ## 1. Clone the Repository
 ```
@@ -66,25 +66,8 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## 7. API Usage
-- The risk prediction endpoint is available at:
-  ```
-  POST http://127.0.0.1:8000/api/accounts/api/risk/
-  Content-Type: application/json
-  ```
-- Example payload:
-  ```json
-  {
-    "requestedEngines": ["QRisk3"],
-    "sex": "Male",
-    "age": 25,
-    "bmi": 25.2,
-    "ethnicity": "NotRecorded",
-    "smokingStatus": "NonSmoker"
-  }
-  ```
 
-## 8. CORS
+## 7. CORS
 If you are using a frontend on a different port, make sure to configure CORS in `settings.py`:
 ```python
 INSTALLED_APPS += ["corsheaders"]
@@ -92,6 +75,5 @@ MIDDLEWARE = ["corsheaders.middleware.CorsMiddleware"] + MIDDLEWARE
 CORS_ALLOW_ALL_ORIGINS = True  # For development only
 ```
 
----
 
-For any issues, check the error messages in your terminal or contact the project maintainer.
+
