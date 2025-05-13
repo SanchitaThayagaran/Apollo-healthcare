@@ -257,6 +257,7 @@ export default function SelfAssessmentForm() {
     const payload = {
       personalInfo: {
         ...personalInfo,
+        age: personalInfo.age ? parseInt(personalInfo.age, 10) : undefined,
         majorComplaint: personalInfo.majorComplaint === 'other' ? personalInfo.majorComplaintOther : personalInfo.majorComplaint
       },
       symptoms: {}
