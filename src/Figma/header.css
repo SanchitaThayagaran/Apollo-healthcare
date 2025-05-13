@@ -76,3 +76,18 @@
 .assessment-button:hover {
   background: #333;
 }
+
+.logout-button {
+  background: black;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #333;
+}

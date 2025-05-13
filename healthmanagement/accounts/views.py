@@ -44,6 +44,7 @@ class GoogleLoginView(APIView):
         if not created and user.role != role:
             user.role = role
             user.save()
+        print(user.id)
 
         # Create PatientProfile if user is a patient and doesn't have a profile yet
         if user.role == 'patient':
@@ -61,7 +62,8 @@ class GoogleLoginView(APIView):
             'access': access_token,
             'refresh': refresh_token,
             'role': user.role,
-            'user_id': user.id
+            'user_id': user.id,
+            'email' :user.email
         }, status=status.HTTP_200_OK)
 
 

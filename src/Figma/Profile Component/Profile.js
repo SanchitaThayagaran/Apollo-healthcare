@@ -154,17 +154,6 @@ const Profile = () => {
           <button type="submit" className="save-button">Save Profile</button>
         </form>
         
-        <div className="nav-buttons">
-          <button onClick={() => navigate('/appointments')} className="nav-button">
-            Appointments
-          </button>
-          <button onClick={() => navigate('/medications')} className="nav-button">
-            Medications
-          </button>
-          <button onClick={() => navigate('/risk-assessment')} className="nav-button">
-            Risk Assessment
-          </button>
-        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { GoogleLogin } from '@react-oauth/google';
 import React from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginFigma.css';
 import '../header.css'; // Adjust path if needed
 import Header from '../header';
@@ -24,6 +24,9 @@ function LoginPage() {
       localStorage.setItem('user_id', response.data.user_id);
 
       localStorage.setItem('role', response.data.role); // 'doctor' or 'patient'
+      localStorage.setItem('email', response.data.email);
+      console.log(response.data);
+      localStorage.setItem('user_id', response.data.user_id);
       // Check user role and redirect to appropriate page
       if (response.data.role === 'patient') {
         navigate('/appointments'); 
@@ -39,7 +42,11 @@ function LoginPage() {
   return (
     <div className="page-container">
       {/* NAVBAR */}
-      <Header />
+      <header className="header">
+            <Link to="/" className="apollo-brand">
+              <img src="/logo.png" alt="Apollo Logo" className="apollo-logo" />
+            </Link>
+          </header>
 
       {/* LOGIN BOX */}
       <main className="login-wrapper">
