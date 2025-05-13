@@ -44,8 +44,8 @@ export default function SelfAssessmentResult() {
                 <p>{result.urgencyExplanation}</p>
               </div>
             )}
-            {/* Print/Download Button */}
-            <div style={{ marginTop: 16 }}>
+            {/* Action Buttons */}
+            <div style={{ marginTop: 16, display: 'flex', gap: '12px' }}>
               <button
                 type="button"
                 onClick={() => window.print()}
@@ -61,6 +61,22 @@ export default function SelfAssessmentResult() {
                 }}
               >
                 Print / Download as PDF
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/appointments')}
+                style={{
+                  background: "#4CAF50",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 4,
+                  padding: "8px 20px",
+                  fontWeight: 600,
+                  fontSize: 15,
+                  cursor: "pointer"
+                }}
+              >
+                Book Appointment
               </button>
             </div>
           </div>
