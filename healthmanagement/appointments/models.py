@@ -5,6 +5,7 @@ class Doctor(models.Model):
     # Simple doctor record; you can expand later
     name = models.CharField(max_length=100)
     specialty = models.CharField(max_length=100)
+    email = models.EmailField() 
 
     def __str__(self):
         return self.name

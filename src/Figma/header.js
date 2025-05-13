@@ -26,14 +26,26 @@ function Header() {
           <NavLink to="/appointments" className={({ isActive }) => isActive ? "active" : ""}>
             APPOINTMENTS
           </NavLink>
+          
         )}
-
+{role === 'patient' && (
+          <NavLink to="/filterappointment" className={({ isActive }) => isActive ? "active" : ""}>
+            VIEW
+          </NavLink>
+          
+        )}
         <NavLink to="/profile" className={({ isActive }) => isActive ? "active" : ""}>PROFILE</NavLink>
       </nav>
 
       <button className="assessment-button" onClick={() => navigate('/assessment-entry')}>
         TAKE ASSESSMENT
       </button>
+      <button className="logout-button" onClick={() => {
+  localStorage.clear();
+  navigate('/login');
+}}>
+  LOGOUT
+</button>
     </header>
   );
 }

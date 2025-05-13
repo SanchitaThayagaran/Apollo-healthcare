@@ -11,6 +11,7 @@ import { API_URL } from '../../config';    // ← make sure this path points to 
 function AppointmentPage() {
   // 1️⃣ Load doctors from the backend
   const [doctors, setDoctors] = useState([]);
+  const patient_id = localStorage.getItem('user_id');
   useEffect(() => {
     axios
       .get(`${API_URL}/appointments/doctors/`)
@@ -37,7 +38,7 @@ function AppointmentPage() {
     if (selectedDoctor !== null && selectedTime) {
       const payload = {
         // for now, hardcode or pull your patient ID from context/localStorage:
-        patient: 2,                 
+        patient: patient_id,                 
         doctor:  selectedDoctor,
         date:    selectedDate.toISOString().split("T")[0], // "YYYY-MM-DD"
         time:    selectedTime                            // "HH:mm:ss"

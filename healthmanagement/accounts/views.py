@@ -41,6 +41,7 @@ class GoogleLoginView(APIView):
         if not created and user.role != role:
             user.role = role
             user.save()
+        print(user.id)
 
         # Step 6: Issue JWT tokens for the user
         refresh = RefreshToken.for_user(user)
@@ -51,7 +52,9 @@ class GoogleLoginView(APIView):
         return Response({
             'access': access_token,
             'refresh': refresh_token,
-            'role': user.role
+            'role': user.role,
+            'email':email,
+            'user_id':user.id
         }, status=status.HTTP_200_OK)
 
 
