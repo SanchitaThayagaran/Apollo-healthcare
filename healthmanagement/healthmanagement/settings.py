@@ -153,5 +153,6 @@ APPROVED_DOCTOR_EMAILS = [
     'doctor1@gmail.com',
     'doctor2@gmail.com',
     'doctor3@gmail.com',
+    'vaishnavikashyap1804@gmai.com'
     # Add other approved email addresses for doctors here
 ]
