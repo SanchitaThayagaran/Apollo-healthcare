@@ -1,50 +1,56 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
 from .models import SelfAssessment
 from .serializers import SelfAssessmentSerializer
 from django.contrib.auth import get_user_model
 import openai
 import os
 from dotenv import load_dotenv
+import traceback
 
 dotenv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env')
 load_dotenv(dotenv_path=dotenv_path)
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-print("Loaded OpenAI key:", repr(OPENAI_API_KEY))
-
 User = get_user_model()
 
 class SelfAssessmentAPIView(APIView):
     def post(self, request):
-        serializer = SelfAssessmentSerializer(data={
-            'symptom_data': request.data,
-            'patient': request.user.id if request.user.is_authenticated else None
-        })
-        serializer.is_valid(raise_exception=True)
-        assessment = serializer.save()
-
-        # Prepare prompt for OpenAI
-        prompt = self.build_prompt(request.data)
-        openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
         try:
-            response = openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "system", "content": "You are a medical assistant."},
-                          {"role": "user", "content": prompt}]
-            )
-            ai_content = response.choices[0].message.content
-            # Parse AI response for 'Analysis' and 'Recommendations'
-            analysis, recommendations = self.parse_analysis_and_recommendations(ai_content)
-        except Exception as e:
-            return Response({'error': f'OpenAI error: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            serializer = SelfAssessmentSerializer(data={
+                'symptom_data': request.data,
+                'patient': request.user.id if request.user.is_authenticated else None
+            })
+            serializer.is_valid(raise_exception=True)
+            assessment = serializer.save()
 
-        return Response({
-            'analysis': analysis,
-            'recommendations': recommendations,
-        }, status=status.HTTP_200_OK)
+            # Prepare prompt for OpenAI
+            prompt = self.build_prompt(request.data)
+            openai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
+            try:
+                response = openai_client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "system", "content": "You are a medical assistant."},
+                              {"role": "user", "content": prompt}]
+                )
+                ai_content = response.choices[0].message.content
+                # Parse AI response for 'Analysis' and 'Recommendations'
+                analysis, recommendations = self.parse_analysis_and_recommendations(ai_content)
+            except Exception as e:
+                tb = traceback.format_exc()
+                return Response({'error': f'OpenAI error: {str(e)}', 'traceback': tb}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            return Response({
+                'analysis': analysis,
+                'recommendations': recommendations,
+            }, status=status.HTTP_200_OK)
+        except serializers.ValidationError as e:
+            return Response({'error': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            tb = traceback.format_exc()
+            return Response({'error': str(e), 'traceback': tb}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def build_prompt(self, data):
         personal = data.get('personalInfo', {})
