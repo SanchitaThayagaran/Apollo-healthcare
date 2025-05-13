@@ -1,17 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeartAttackRiskForm from "./HeartAttackRiskForm";
 import DiabetesRiskForm from "./DiabetesRiskForm";
 import "./RiskAssessment.css";
 import Header from "../header";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 export default function RiskAssessment() {
   const [selected, setSelected] = useState(null);
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  if (selected === "heart") return <HeartAttackRiskForm onBack={() => setSelected(null)} />;
-  if (selected === "diabetes") return <DiabetesRiskForm onBack={() => setSelected(null)} />;
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    const token = localStorage.getItem('access');
+    const userId = localStorage.getItem('user_id');
+    
+    if (!token || !userId) {
+      navigate('/login');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:8000/api/accounts/patient-profile/${userId}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.data) {
+        // Calculate age from date_of_birth if available
+        let calculatedAge = null;
+        if (response.data.date_of_birth) {
+          const birthDate = new Date(response.data.date_of_birth);
+          const today = new Date();
+          calculatedAge = today.getFullYear() - birthDate.getFullYear();
+          
+          // Adjust age if birthday hasn't occurred yet this year
+          const birthMonth = birthDate.getMonth();
+          const todayMonth = today.getMonth();
+          if (todayMonth < birthMonth || 
+              (todayMonth === birthMonth && today.getDate() < birthDate.getDate())) {
+            calculatedAge--;
+          }
+        }
+        
+        // Map gender from M/F/O to Male/Female for the risk forms
+        let mappedGender = null;
+        if (response.data.gender === 'M') {
+          mappedGender = 'Male';
+        } else if (response.data.gender === 'F') {
+          mappedGender = 'Female';
+        }
+        
+        setProfileData({
+          age: calculatedAge,
+          gender: mappedGender
+        });
+      }
+      
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setLoading(false);
+    }
+  };
+
+  if (selected === "heart") return <HeartAttackRiskForm onBack={() => setSelected(null)} initialAge={profileData?.age} initialGender={profileData?.gender} />;
+  if (selected === "diabetes") return <DiabetesRiskForm onBack={() => setSelected(null)} initialAge={profileData?.age} initialGender={profileData?.gender} />;
 
   return (
     <div className="risk-assessment-page">
-        <Header />
+      <Header />
       <h2 className="risk-assessment-title">Risk Assessment</h2>
       <div className="risk-assessment-cards-row">
         <div className="risk-assessment-card">

@@ -21,6 +21,8 @@ function LoginPage() {
       // Save access/refresh tokens in localStorage
       localStorage.setItem('access', response.data.access);
       localStorage.setItem('refresh', response.data.refresh);
+      localStorage.setItem('user_id', response.data.user_id);
+
       localStorage.setItem('role', response.data.role); // 'doctor' or 'patient'
       // Check user role and redirect to appropriate page
       if (response.data.role === 'patient') {

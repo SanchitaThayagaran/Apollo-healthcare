@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../header";
 import "./RiskAssessment.css";
 
-export default function DiabetesRiskForm() {
+export default function DiabetesRiskForm({ onBack, initialAge, initialGender }) {
   // State for all fields
-  const [sex, setSex] = useState("");
-  const [age, setAge] = useState("");
+  const [sex, setSex] = useState(initialGender || "");
+  const [age, setAge] = useState(initialAge || "");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [ethnicity, setEthnicity] = useState("");
@@ -26,6 +26,12 @@ export default function DiabetesRiskForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
+
+  // Update state if props change
+  useEffect(() => {
+    if (initialGender) setSex(initialGender);
+    if (initialAge) setAge(initialAge);
+  }, [initialGender, initialAge]);
 
   // Helper to calculate BMI
   const calculateBMI = () => {
@@ -57,8 +63,12 @@ export default function DiabetesRiskForm() {
 
     setLoading(true);
 
+    // Get user ID from local storage
+    const userId = localStorage.getItem('user_id');
+
     // Build payload with only updated fields
     const payload = { requestedEngines: ["QDiabetes"] };
+    if (userId) payload.user_id = userId;
     if (sex) payload.sex = sex;
     if (age) payload.age = Number(age);
     const bmi = calculateBMI();
@@ -104,16 +114,21 @@ export default function DiabetesRiskForm() {
       <h1 style={{ textAlign: 'center', marginTop: '20px' }}>Diabetes Risk Assessment</h1>
       <div className="risk-form-wrapper">
         <form className="risk-form-section" onSubmit={handleSubmit}>
-          <h2>Personal Information</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h2 style={{ margin: 0 }}>Personal Information</h2>
+            <div style={{ width: '130px' }}></div> {/* Spacer for alignment */}
+          </div>
           <div className="form-row">
             <div className="form-group">
               <label>Biological Sex <span style={{color: 'red'}}>*</span></label>
               <div className="radio-group">
                 <label>
-                  <input type="radio" name="sex" value="Female" required checked={sex === "Female"} onChange={() => setSex("Female")} /> Female
+                  <input type="radio" name="sex" value="Female" required checked={sex === "Female"} onChange={() => setSex("Female")} />
+                  Female
                 </label>
                 <label>
-                  <input type="radio" name="sex" value="Male" required checked={sex === "Male"} onChange={() => setSex("Male")} /> Male
+                  <input type="radio" name="sex" value="Male" required checked={sex === "Male"} onChange={() => setSex("Male")} />
+                  Male
                 </label>
               </div>
             </div>
@@ -168,27 +183,75 @@ export default function DiabetesRiskForm() {
             <div className="form-group">
               <label>Smoking Status</label>
               <div className="radio-group">
-                <label><input type="radio" name="smoking" value="ExSmoker" checked={smokingStatus === "ExSmoker"} onChange={() => setSmokingStatus("ExSmoker")} /> Ex-smoker</label>
-                <label><input type="radio" name="smoking" value="LightSmoker" checked={smokingStatus === "LightSmoker"} onChange={() => setSmokingStatus("LightSmoker")} /> Light smoker (less than 10 cigarettes a day)</label>
-                <label><input type="radio" name="smoking" value="ModerateSmoker" checked={smokingStatus === "ModerateSmoker"} onChange={() => setSmokingStatus("ModerateSmoker")} /> Moderate smoker (between 10 and 19 cigarettes a day)</label>
-                <label><input type="radio" name="smoking" value="HeavySmoker" checked={smokingStatus === "HeavySmoker"} onChange={() => setSmokingStatus("HeavySmoker")} /> Heavy smoker (over 20 cigarettes a day)</label>
-                <label><input type="radio" name="smoking" value="NotKnown" checked={smokingStatus === "NotKnown"} onChange={() => setSmokingStatus("NotKnown")} /> Not Known</label>
-                <label><input type="radio" name="smoking" value="NonSmoker" checked={smokingStatus === "NonSmoker"} onChange={() => setSmokingStatus("NonSmoker")} /> Non-smoker</label>
+                <label>
+                  <input type="radio" name="smoking" value="ExSmoker" checked={smokingStatus === "ExSmoker"} onChange={() => setSmokingStatus("ExSmoker")} />
+                  Ex-smoker
+                </label>
+                <label>
+                  <input type="radio" name="smoking" value="LightSmoker" checked={smokingStatus === "LightSmoker"} onChange={() => setSmokingStatus("LightSmoker")} />
+                  Light smoker (less than 10 cigarettes a day)
+                </label>
+                <label>
+                  <input type="radio" name="smoking" value="ModerateSmoker" checked={smokingStatus === "ModerateSmoker"} onChange={() => setSmokingStatus("ModerateSmoker")} />
+                  Moderate smoker (between 10 and 19 cigarettes a day)
+                </label>
+                <label>
+                  <input type="radio" name="smoking" value="HeavySmoker" checked={smokingStatus === "HeavySmoker"} onChange={() => setSmokingStatus("HeavySmoker")} />
+                  Heavy smoker (over 20 cigarettes a day)
+                </label>
+                <label>
+                  <input type="radio" name="smoking" value="NotKnown" checked={smokingStatus === "NotKnown"} onChange={() => setSmokingStatus("NotKnown")} />
+                  Not Known
+                </label>
+                <label>
+                  <input type="radio" name="smoking" value="NonSmoker" checked={smokingStatus === "NonSmoker"} onChange={() => setSmokingStatus("NonSmoker")} />
+                  Non-smoker
+                </label>
               </div>
             </div>
           </div>
           <h2>Clinical Information</h2>
           <div className="form-group checkbox-group">
-            <label><input type="checkbox" checked={cvd} onChange={e => setCvd(e.target.checked)} /> Have you had a heart attack, angina, stroke or TIA, or currently taking statins?</label>
-            <label><input type="checkbox" checked={atypicalAntipsychoticMedication} onChange={e => setAtypicalAntipsychoticMedication(e.target.checked)} /> On atypical antipsychotic medication?</label>
-            <label><input type="checkbox" checked={systemicCorticosteroids} onChange={e => setSystemicCorticosteroids(e.target.checked)} /> Are you on regular steroid tablets?</label>
-            <label><input type="checkbox" checked={bloodPressureTreatment} onChange={e => setBloodPressureTreatment(e.target.checked)} /> On blood pressure treatment?</label>
-            <label><input type="checkbox" checked={gestationalDiabetes} onChange={e => setGestationalDiabetes(e.target.checked)} /> Do you have gestational diabetes (i.e. diabetes that arose during pregnancy)?</label>
-            <label><input type="checkbox" checked={learningDisabilities} onChange={e => setLearningDisabilities(e.target.checked)} /> Learning disabilities?</label>
-            <label><input type="checkbox" checked={manicDepressionSchizophrenia} onChange={e => setManicDepressionSchizophrenia(e.target.checked)} /> Manic depression or schizophrenia?</label>
-            <label><input type="checkbox" checked={polycysticOvaries} onChange={e => setPolycysticOvaries(e.target.checked)} /> Do you have polycystic ovaries?</label>
-            <label><input type="checkbox" checked={statins} onChange={e => setStatins(e.target.checked)} /> Are you on statins?</label>
-            <label><input type="checkbox" checked={familyHistoryDiabetes} onChange={e => setFamilyHistoryDiabetes(e.target.checked)} /> Do immediate family (mother, father, brothers or sisters) have diabetes?</label>
+            <label>
+              <input type="checkbox" checked={cvd} onChange={e => setCvd(e.target.checked)} />
+              Have you had a heart attack, angina, stroke or TIA, or currently taking statins?
+            </label>
+            <label>
+              <input type="checkbox" checked={atypicalAntipsychoticMedication} onChange={e => setAtypicalAntipsychoticMedication(e.target.checked)} />
+              On atypical antipsychotic medication?
+            </label>
+            <label>
+              <input type="checkbox" checked={systemicCorticosteroids} onChange={e => setSystemicCorticosteroids(e.target.checked)} />
+              Are you on regular steroid tablets?
+            </label>
+            <label>
+              <input type="checkbox" checked={bloodPressureTreatment} onChange={e => setBloodPressureTreatment(e.target.checked)} />
+              On blood pressure treatment?
+            </label>
+            <label>
+              <input type="checkbox" checked={gestationalDiabetes} onChange={e => setGestationalDiabetes(e.target.checked)} />
+              Do you have gestational diabetes (i.e. diabetes that arose during pregnancy)?
+            </label>
+            <label>
+              <input type="checkbox" checked={learningDisabilities} onChange={e => setLearningDisabilities(e.target.checked)} />
+              Learning disabilities?
+            </label>
+            <label>
+              <input type="checkbox" checked={manicDepressionSchizophrenia} onChange={e => setManicDepressionSchizophrenia(e.target.checked)} />
+              Manic depression or schizophrenia?
+            </label>
+            <label>
+              <input type="checkbox" checked={polycysticOvaries} onChange={e => setPolycysticOvaries(e.target.checked)} />
+              Do you have polycystic ovaries?
+            </label>
+            <label>
+              <input type="checkbox" checked={statins} onChange={e => setStatins(e.target.checked)} />
+              Are you on statins?
+            </label>
+            <label>
+              <input type="checkbox" checked={familyHistoryDiabetes} onChange={e => setFamilyHistoryDiabetes(e.target.checked)} />
+              Do immediate family (mother, father, brothers or sisters) have diabetes?
+            </label>
           </div>
           <div className="form-row">
             <div className="form-group">
@@ -225,6 +288,17 @@ export default function DiabetesRiskForm() {
                   <p><b>Heart Age:</b> {result.heartAge}</p>
 
                   <p>In other words, in a crowd of 100 people with the same risk factors as you, {Math.round(result.riskScore)} are likely to develop diabetes within the next 10 years.</p>
+                  
+                  {result.recommendations && result.recommendations.length > 0 && (
+                    <div style={{ marginTop: '20px', borderTop: '1px solid #e0e0e0', paddingTop: '15px' }}>
+                      <h4 style={{ color: '#2196f3', marginBottom: '10px' }}>Preventive Recommendations</h4>
+                      <ul style={{ paddingLeft: '20px', margin: '0' }}>
+                        {result.recommendations.map((rec, index) => (
+                          <li key={index} style={{ marginBottom: '8px' }}>{rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div style={{ color: 'red' }}>
