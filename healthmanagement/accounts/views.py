@@ -3,7 +3,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import CustomUser
+from .models import CustomUser, PatientProfile
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class GoogleLoginView(APIView):
@@ -42,6 +42,12 @@ class GoogleLoginView(APIView):
             user.role = role
             user.save()
 
+        # Create PatientProfile if user is a patient and doesn't have a profile yet
+        if user.role == 'patient':
+            PatientProfile.objects.get_or_create(user=user)
+
+        print(user.id, user.email, user.role)
+
         # Step 6: Issue JWT tokens for the user
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
@@ -51,5 +57,6 @@ class GoogleLoginView(APIView):
         return Response({
             'access': access_token,
             'refresh': refresh_token,
-            'role': user.role
+            'role': user.role,
+            'user_id': user.id
         }, status=status.HTTP_200_OK)
