@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import CustomUser, PatientProfile
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import permission_classes
 
 class GoogleLoginView(APIView):
     def post(self, request):
@@ -60,3 +63,56 @@ class GoogleLoginView(APIView):
             'role': user.role,
             'user_id': user.id
         }, status=status.HTTP_200_OK)
+
+
+class PatientProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, user_id):
+        # Check permissions - users can only view their own profile or doctors can view any
+        if str(request.user.id) != user_id and request.user.role != 'doctor':
+            return Response({"error": "You don't have permission to view this profile."}, 
+                            status=status.HTTP_403_FORBIDDEN)
+            
+        # Get the profile or return 404
+        profile = get_object_or_404(PatientProfile, user_id=user_id)
+        
+        # Return the profile data
+        data = {
+            'user_id': profile.user_id,
+            'date_of_birth': profile.date_of_birth,
+            'gender': profile.gender,
+            'insurance_provider': profile.insurance_provider
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)
+    
+    def put(self, request, user_id):
+        # Check permissions - users can only update their own profile
+        if str(request.user.id) != user_id:
+            return Response({"error": "You don't have permission to update this profile."}, 
+                            status=status.HTTP_403_FORBIDDEN)
+            
+        # Get the profile
+        profile = get_object_or_404(PatientProfile, user_id=user_id)
+        
+        # Update the profile with the request data
+        if 'date_of_birth' in request.data:
+            profile.date_of_birth = request.data.get('date_of_birth')
+        if 'gender' in request.data:
+            profile.gender = request.data.get('gender')
+        if 'insurance_provider' in request.data:
+            profile.insurance_provider = request.data.get('insurance_provider')
+            
+        # Save the changes
+        profile.save()
+        
+        # Return the updated profile
+        data = {
+            'user_id': profile.user_id,
+            'date_of_birth': profile.date_of_birth,
+            'gender': profile.gender,
+            'insurance_provider': profile.insurance_provider
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)
