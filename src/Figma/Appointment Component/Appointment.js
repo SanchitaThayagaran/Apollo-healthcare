@@ -1,21 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../header.css';
 import './Appointment.css';
 import Header from '../header';
 
-function AppointmentPage() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(null);
-  const timeSlots = ['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '2:00 PM', '2:30 PM'];
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
+import axios from 'axios';
+import { API_URL } from '../../config';    // ← make sure this path points to your src/config.js
 
+function AppointmentPage() {
+  // 1️⃣ Load doctors from the backend
+  const [doctors, setDoctors] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/appointments/doctors/`)
+      .then(res => setDoctors(res.data))
+      .catch(err => console.error("Failed to load doctors:", err));
+  }, []);
+
+  // 2️⃣ Track which doctor, date, and time the user selects
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedDate,   setSelectedDate]   = useState(new Date());
+  const [selectedTime,   setSelectedTime]   = useState(null);
+  const [showSuccess,    setShowSuccess]    = useState(false);
+
+  // 3️⃣ Define your time slots in ISO format for the API,
+  //    but we’ll display them in 12-hour form below
+  const timeSlots = [
+    "09:00:00","09:30:00","10:00:00",
+    "10:30:00","11:00:00","14:00:00",
+    "14:30:00"
+  ];
+
+  // 4️⃣ When the user clicks Confirm, POST to your Django endpoint
   const confirmAppointment = () => {
     if (selectedDoctor !== null && selectedTime) {
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
+      const payload = {
+        // for now, hardcode or pull your patient ID from context/localStorage:
+        patient: 2,                 
+        doctor:  selectedDoctor,
+        date:    selectedDate.toISOString().split("T")[0], // "YYYY-MM-DD"
+        time:    selectedTime                            // "HH:mm:ss"
+      };
+
+      axios
+        .post(
+          `${API_URL}/appointments/book/`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // If you protect this endpoint with JWT, add:
+              // Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          }
+        )
+        .then(() => {
+          setShowSuccess(true);
+          setTimeout(() => setShowSuccess(false), 3000);
+        })
+        .catch(err => {
+          console.error("Booking failed:", err.response || err);
+          alert("Failed to book appointment. Check console for details.");
+        });
     }
   };
 
@@ -24,50 +71,53 @@ function AppointmentPage() {
       <Header />
       <h1 className="section-title">Choose your Appointment:</h1>
 
+      {/* 🩺 Doctor cards from the API */}
       <div className="medication-grid">
-        {[...Array(6)].map((_, i) => (
+        {doctors.map(doc => (
           <div
-          key={i}
-          className={`doctor-card ${selectedDoctor === i ? 'selected' : ''}`}
-          onClick={() => setSelectedDoctor(i)}
-        >
-          <img src="/Cardiologist.jpg" alt="Doctor" />
-          <div className="doc-info">
-            <strong>Dr. Alina Fatima</strong>
-            <span><b>Specialty:</b> Senior Surgeon</span>
-            <span><b>Hours:</b> 09:30 AM – 3:30 PM</span>
-            <span><b>Fee:</b> $12</span>
+            key={doc.id}
+            className={`doctor-card ${selectedDoctor === doc.id ? 'selected' : ''}`}
+            onClick={() => setSelectedDoctor(doc.id)}
+          >
+            <img src="/Cardiologist.jpg" alt={doc.name} />
+            <div className="doc-info">
+              <strong>{doc.name}</strong>
+              <span><b>Specialty:</b> {doc.specialty}</span>
+            </div>
           </div>
-          <div className="rating">⭐ 5.0</div>
-          <div className="arrow"></div>
-        </div>
-        
         ))}
       </div>
 
+      {/* 📅 Date picker */}
       <div className="calendar-picker">
         <h3 className="sub-heading">Select Appointment Date</h3>
         <DatePicker
           selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
+          onChange={date => setSelectedDate(date)}
           inline
           minDate={new Date()}
         />
       </div>
 
+      {/* 🕒 Time slots */}
       <h3 className="sub-heading">Available Time</h3>
       <div className="time-slots">
-        {timeSlots.map((time) => (
+        {timeSlots.map(time => (
           <button
             key={time}
             className={`time ${selectedTime === time ? 'selected' : ''}`}
             onClick={() => setSelectedTime(time)}
           >
-            {time}
+            {
+              // Display "9:00 AM" style from "09:00:00"
+              new Date(`1970-01-01T${time}`)
+                .toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+            }
           </button>
         ))}
       </div>
 
+      {/* ✅ Confirm button */}
       <button
         className="confirm-button"
         onClick={confirmAppointment}
@@ -76,9 +126,15 @@ function AppointmentPage() {
         Confirm
       </button>
 
+      {/* 🎉 Success notification */}
       {showSuccess && (
         <div className="success-notification">
-          ✅ Appointment confirmed for {selectedDate.toDateString()} at {selectedTime}
+          ✅ Appointment confirmed for{" "}
+          {selectedDate.toDateString()} at{" "}
+          {new Date(`1970-01-01T${selectedTime}`).toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+          })}
         </div>
       )}
 
