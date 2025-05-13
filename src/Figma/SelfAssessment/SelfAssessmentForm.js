@@ -231,7 +231,7 @@ export default function SelfAssessmentForm() {
     <div className="symptom-section">
       <h3>Personal Information</h3>
       <div className="symptom-item">
-        <label>Age:
+        <label>Age <span style={{color: 'red'}}>*</span>:
           <input
             type="number"
             min="0"
@@ -244,7 +244,7 @@ export default function SelfAssessmentForm() {
         </label>
       </div>
       <div className="symptom-item">
-        <label>Sex:
+        <label>Sex <span style={{color: 'red'}}>*</span>:
           <select
             value={personalInfo.sex}
             onChange={e => handlePersonalInfoChange('sex', e.target.value)}
@@ -259,7 +259,7 @@ export default function SelfAssessmentForm() {
         </label>
       </div>
       <div className="symptom-item">
-        <label>Major Complaint:
+        <label>Major Complaint <span style={{color: 'red'}}>*</span>:
           <select
             value={personalInfo.majorComplaint}
             onChange={e => handlePersonalInfoChange('majorComplaint', e.target.value)}
@@ -321,7 +321,7 @@ export default function SelfAssessmentForm() {
             </div>
             <div className="symptom-details">
               <div className="severity-select">
-                <label>Severity:</label>
+                <label>Severity <span style={{color: 'red'}}>*</span>:</label>
                 <select
                   value={details[symptom.id]?.severity || ""}
                   onChange={e => handleDetailChange(symptom.id, "severity", e.target.value)}
@@ -334,7 +334,7 @@ export default function SelfAssessmentForm() {
                 </select>
               </div>
               <div className="duration-select">
-                <label>Duration:</label>
+                <label>Duration <span style={{color: 'red'}}>*</span>:</label>
                 <select
                   value={details[symptom.id]?.duration || ""}
                   onChange={e => handleDetailChange(symptom.id, "duration", e.target.value)}
@@ -352,7 +352,7 @@ export default function SelfAssessmentForm() {
               <div className="followup-section">
                 {FOLLOW_UPS[symptom.id].map(q => (
                   <div key={q.id} className="followup-item">
-                    <label>{q.label}
+                    <label>{q.label} <span style={{color: 'red'}}>*</span>:
                       <select
                         value={followUps[symptom.id]?.[q.id] || ''}
                         onChange={e => handleFollowUpChange(symptom.id, q.id, e.target.value)}
