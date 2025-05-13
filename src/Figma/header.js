@@ -1,10 +1,12 @@
 // src/components/Header.js
 import React from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import './header.css'; // This points to your existing styles
+import './header.css';
 
 function Header() {
   const navigate = useNavigate();
+  const role = localStorage.getItem('role'); // 'doctor' or 'patient'
+
   return (
     <header className="header">
       <Link to="/" className="apollo-brand">
@@ -13,12 +15,25 @@ function Header() {
 
       <nav>
         <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>HOME</NavLink>
-        <NavLink to="/medications" className={({ isActive }) => isActive ? "active" : ""}>MEDICATIONS</NavLink>
-        <NavLink to="/appointments" className={({ isActive }) => isActive ? "active" : ""}>APPOINTMENTS</NavLink>
+
+        {role === 'doctor' && (
+          <NavLink to="/medications" className={({ isActive }) => isActive ? "active" : ""}>
+            MEDICATIONS
+          </NavLink>
+        )}
+
+        {role === 'patient' && (
+          <NavLink to="/appointments" className={({ isActive }) => isActive ? "active" : ""}>
+            APPOINTMENTS
+          </NavLink>
+        )}
+
         <NavLink to="/profile" className={({ isActive }) => isActive ? "active" : ""}>PROFILE</NavLink>
       </nav>
 
-      <button className="assessment-button" onClick={() => navigate('/assessment-entry')}>TAKE ASSESSMENT</button>
+      <button className="assessment-button" onClick={() => navigate('/assessment-entry')}>
+        TAKE ASSESSMENT
+      </button>
     </header>
   );
 }
