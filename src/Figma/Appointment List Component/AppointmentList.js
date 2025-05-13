@@ -11,6 +11,7 @@ function AppointmentList() {
   const email = localStorage.getItem('email'); // Get the email from localStorage
   const role = localStorage.getItem('role');   // Get the role from localStorage
   const access = localStorage.getItem('access'); // Get the token
+  console.log(email)
 
   useEffect(() => {
     const fetchAppointments = async () => {

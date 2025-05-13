@@ -25,6 +25,7 @@ function LoginPage() {
 
       localStorage.setItem('role', response.data.role); // 'doctor' or 'patient'
       localStorage.setItem('email', response.data.email);
+      console.log(response.data);
       localStorage.setItem('user_id', response.data.user_id);
       // Check user role and redirect to appropriate page
       if (response.data.role === 'patient') {

@@ -48,7 +48,7 @@ class FilteredAppointmentsView(APIView):
 
         elif role == 'patient':
             patient = CustomUser.objects.filter(email=email, role='patient').first()
-            print(patient.id)
+            print(patient)
             if not patient:
                 return Response({'detail': 'Patient not found.'}, status=status.HTTP_404_NOT_FOUND)
             appointments = Appointment.objects.filter(patient_id=patient.id)

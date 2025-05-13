@@ -62,7 +62,8 @@ class GoogleLoginView(APIView):
             'access': access_token,
             'refresh': refresh_token,
             'role': user.role,
-            'user_id': user.id
+            'user_id': user.id,
+            'email' :user.email
         }, status=status.HTTP_200_OK)
 
 
