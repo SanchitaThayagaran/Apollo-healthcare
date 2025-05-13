@@ -6,146 +6,21 @@ Overview -
 
 The Healthcare Management System (HMS) is designed to digitize patient records and improve doctor-patient interactions. It includes secure authentication and role-based access control for doctors, patients, and staff. The system features electronic health records (EHR), enabling patients to upload their medical history, lab results, and prescriptions, while doctors can update consultation notes. Additionally, search and filtering functions allow for quick access to patient history, prescriptions, and diagnoses. To enhance patient care, the system includes health risk assessments using self-assessment questionnaires to evaluate potential risks such as diabetes, heart disease, and other health conditions. The system also automates prescription refill requests and tracks patient drug usage to ensure proper medication management. To maintain data security and compliance, the system employs encryption and HIPAA-compliant security measures to protect sensitive medical information.
 
-# Apollo Healthcare Frontend Setup
+# Features
 
-## Prerequisites
+## User Authentication and Role Management
 
-- Node.js (v16+)
-- npm or yarn
+- Role-Based Access control
+- Password policies and security measures
 
-## Steps
+## Appointment booking
 
-1. Navigate to the Frontend Directory
+- Book doctor appointments and check availability
 
-```
-cd ../Apollo-healthcare
-```
+## Patient Self Assessment
 
-2. Install Frontend Dependencies
+- Symptom checker for preliminary diagnosis
 
-```
-npm install
-# or
-yarn install
-```
+## Patient Risk Assessment
 
-3. Configure Environment Variables
-   Create a .env file in the frontend folder:
-
-```
-env
-REACT_APP_API_BASE_URL=http://127.0.0.1:8000
-```
-
-This base URL will allow your React app to make API calls to the Django backend.
-
-4. Run the Frontend App
-
-```
-npm start
-# or
-yarn start
-```
-
-The app should now be accessible at http://localhost:3000.
-
-# Apollo Healthcare Backend Setup
-
-## Prerequisites
-
-- Python 3.11+
-- pip
-- PostgreSQL (for production; SQLite can be used for local testing)
-
-## 1. Clone the Repository
-
-```
-git clone <repo-url>
-cd Apollo-healthcare/healthmanagement
-```
-
-## 2. Install Python Dependencies
-
-```
-pip install -r requirements.txt
-```
-
-## 3. Set Up PostgreSQL
-
-- Install PostgreSQL (macOS: `brew install postgresql`)
-- Start PostgreSQL:
-  ```
-  brew services start postgresql
-  ```
-- Create a database and user (replace with your DB name/user if needed):
-  ```
-  psql -U postgres
-  CREATE DATABASE "apollo-health";
-  CREATE USER postgres WITH PASSWORD 'postgres';
-  GRANT ALL PRIVILEGES ON DATABASE "apollo-health" TO postgres;
-  \q
-  ```
-- Update `healthmanagement/healthmanagement/settings.py` with your DB credentials if needed:
-  ```python
-  DATABASES = {
-      'default': {
-          'ENGINE': 'django.db.backends.postgresql',
-          'NAME': 'apollo-health',
-          'USER': 'postgres',
-          'PASSWORD': 'postgres',
-          'HOST': 'localhost',
-          'PORT': '5432',
-      }
-  }
-  ```
-
-## 4. Run Migrations
-
-```
-python manage.py migrate
-```
-
-## 5. (Optional) Create a Superuser
-
-```
-python manage.py createsuperuser
-```
-
-## 6. Run the Development Server
-
-```
-python manage.py runserver
-```
-
-## 7. API Usage
-
-- The risk prediction endpoint is available at:
-  ```
-  POST http://127.0.0.1:8000/api/accounts/api/risk/
-  Content-Type: application/json
-  ```
-- Example payload:
-  ```json
-  {
-    "requestedEngines": ["QRisk3"],
-    "sex": "Male",
-    "age": 25,
-    "bmi": 25.2,
-    "ethnicity": "NotRecorded",
-    "smokingStatus": "NonSmoker"
-  }
-  ```
-
-## 8. CORS
-
-If you are using a frontend on a different port, make sure to configure CORS in `settings.py`:
-
-```python
-INSTALLED_APPS += ["corsheaders"]
-MIDDLEWARE = ["corsheaders.middleware.CorsMiddleware"] + MIDDLEWARE
-CORS_ALLOW_ALL_ORIGINS = True  # For development only
-```
-
----
-
-For any issues, check the error messages in your terminal or contact the project maintainer.
+- Specific marker to evaluate risks for Diabetes, heart disease etc.
