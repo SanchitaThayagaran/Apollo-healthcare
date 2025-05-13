@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import RiskPredictionView
+from risk_prediction.views import RiskPredictionView
 from self_assessment.views import SelfAssessmentAPIView
 
 urlpatterns = [

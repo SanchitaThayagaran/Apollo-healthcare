@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../header";
 import "./SelfAssessment.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MAJOR_COMPLAINTS = [
   { value: "chest_pain", label: "Chest pain" },
@@ -125,6 +127,69 @@ export default function SelfAssessmentForm() {
   const [error, setError] = useState("");
   const [followUps, setFollowUps] = useState({});
   const [followUpOther, setFollowUpOther] = useState({});
+  const [profileLoading, setProfileLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
+
+  const fetchProfileData = async () => {
+    const token = localStorage.getItem('access');
+    const userId = localStorage.getItem('user_id');
+
+    if (!token || !userId) {
+      // Don't redirect, just allow manual entry
+      setProfileLoading(false);
+      return;
+    }
+    
+    try {
+      setProfileLoading(true);
+      const response = await axios.get(`http://localhost:8000/api/accounts/patient-profile/${userId}/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (response.data) {
+        // Calculate age from date_of_birth if available
+        let calculatedAge = null;
+        if (response.data.date_of_birth) {
+          const birthDate = new Date(response.data.date_of_birth);
+          const today = new Date();
+          calculatedAge = today.getFullYear() - birthDate.getFullYear();
+          
+          // Adjust age if birthday hasn't occurred yet this year
+          const birthMonth = birthDate.getMonth();
+          const todayMonth = today.getMonth();
+          if (todayMonth < birthMonth || 
+              (todayMonth === birthMonth && today.getDate() < birthDate.getDate())) {
+            calculatedAge--;
+          }
+        }
+        
+        // Map gender from M/F/O to Male/Female for the form
+        let mappedGender = null;
+        if (response.data.gender === 'M') {
+          mappedGender = 'Male';
+        } else if (response.data.gender === 'F') {
+          mappedGender = 'Female';
+        }
+        
+        setPersonalInfo(prev => ({
+          ...prev,
+          age: calculatedAge || '',
+          sex: mappedGender || ''
+        }));
+      }
+      
+      setProfileLoading(false);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setProfileLoading(false);
+    }
+  };
 
   // Step 0: Personal Info
   const handlePersonalInfoChange = (field, value) => {
@@ -219,7 +284,8 @@ export default function SelfAssessmentForm() {
       }
 
       const data = await response.json();
-      setResult(data);
+      // Navigate to results page with result data
+      navigate('/self-assessment-result', { state: { result: data } });
     } catch (err) {
       setResult({ error: "Failed to analyze symptoms" });
     }
@@ -230,59 +296,69 @@ export default function SelfAssessmentForm() {
   const renderPersonalInfo = () => (
     <div className="symptom-section">
       <h3>Personal Information</h3>
-      <div className="symptom-item">
-        <label>Age <span style={{color: 'red'}}>*</span>:
-          <input
-            type="number"
-            min="0"
-            max="120"
-            value={personalInfo.age}
-            onChange={e => handlePersonalInfoChange('age', e.target.value)}
-            required
-            style={{ marginLeft: 8 }}
-          />
-        </label>
-      </div>
-      <div className="symptom-item">
-        <label>Sex <span style={{color: 'red'}}>*</span>:
-          <select
-            value={personalInfo.sex}
-            onChange={e => handlePersonalInfoChange('sex', e.target.value)}
-            required
-            style={{ marginLeft: 8 }}
-          >
-            <option value="">Select</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
-      </div>
-      <div className="symptom-item">
-        <label>Major Complaint <span style={{color: 'red'}}>*</span>:
-          <select
-            value={personalInfo.majorComplaint}
-            onChange={e => handlePersonalInfoChange('majorComplaint', e.target.value)}
-            required
-            style={{ marginLeft: 8 }}
-          >
-            <option value="">Select</option>
-            {MAJOR_COMPLAINTS.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </label>
-        {personalInfo.majorComplaint === 'other' && (
-          <input
-            type="text"
-            placeholder="Please specify"
-            value={personalInfo.majorComplaintOther}
-            onChange={e => handlePersonalInfoChange('majorComplaintOther', e.target.value)}
-            style={{ marginLeft: 8 }}
-            required
-          />
-        )}
-      </div>
+      {profileLoading ? (
+        <div>Loading profile information...</div>
+      ) : (
+        <>
+          <div className="symptom-item">
+            <label>Age <span style={{color: 'red'}}>*</span>:
+              <input
+                type="number"
+                min="0"
+                max="120"
+                value={personalInfo.age}
+                onChange={e => handlePersonalInfoChange('age', e.target.value)}
+                required
+                style={{ marginLeft: 8, width: '250px' }}
+              />
+            </label>
+          </div>
+          <div className="symptom-item">
+            <label>Sex <span style={{color: 'red'}}>*</span>:
+              <select
+                value={personalInfo.sex}
+                onChange={e => handlePersonalInfoChange('sex', e.target.value)}
+                required
+                style={{ marginLeft: 8, width: '250px' }}
+              >
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </label>
+          </div>
+          <div className="symptom-item">
+            <label>Major Complaint <span style={{color: 'red'}}>*</span>:
+              <select
+                value={personalInfo.majorComplaint}
+                onChange={e => handlePersonalInfoChange('majorComplaint', e.target.value)}
+                required
+                style={{ marginLeft: 8, width: '250px' }}
+              >
+                <option value="">Select</option>
+                {MAJOR_COMPLAINTS.map(complaint => (
+                  <option key={complaint.value} value={complaint.value}>
+                    {complaint.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {personalInfo.majorComplaint === 'other' && (
+            <div className="symptom-item">
+              <label>Please specify:
+                <input
+                  type="text"
+                  value={personalInfo.majorComplaintOther}
+                  onChange={e => handlePersonalInfoChange('majorComplaintOther', e.target.value)}
+                  required
+                  style={{ marginLeft: 8 }}
+                />
+              </label>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 
@@ -290,14 +366,24 @@ export default function SelfAssessmentForm() {
     <div className="symptom-section">
       {Object.entries(SYMPTOMS).map(([category, symptoms]) => (
         <div key={category} style={{ marginBottom: 24 }}>
-          <h3>{category.charAt(0).toUpperCase() + category.slice(1)} Symptoms</h3>
+          <h3 style={{ fontWeight: 600 }}>{category.charAt(0).toUpperCase() + category.slice(1)} Symptoms</h3>
           {symptoms.map(symptom => (
             <div key={symptom.id} className="symptom-item">
-              <label>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  cursor: 'pointer',
+                  width: '100%',
+                  fontWeight: 400
+                }}
+              >
                 <input
                   type="checkbox"
                   checked={!!checkedSymptoms[symptom.id]}
                   onChange={e => handleSymptomCheck(symptom.id, e.target.checked)}
+                  style={{ width: 18, height: 18 }}
                 />
                 {symptom.label}
               </label>
@@ -317,7 +403,7 @@ export default function SelfAssessmentForm() {
         {keySymptoms.map(symptom => (
           <div key={symptom.id} className="symptom-item">
             <div className="symptom-main">
-              <strong>{symptom.label}</strong>
+              {symptom.label}
             </div>
             <div className="symptom-details">
               <div className="severity-select">
@@ -404,6 +490,11 @@ export default function SelfAssessmentForm() {
       <h1 style={{ textAlign: 'center', marginTop: '20px' }}>Self Assessment</h1>
       <div className="self-assessment-wrapper">
         <form className="self-assessment-section" onSubmit={handleSubmit}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <span style={{ fontWeight: 500, fontSize: 16 }}>
+              Step {step + 1} of 3
+            </span>
+          </div>
           <div className="progress-bar">
             <div className="progress" style={{ width: `${(step + 1) * 33.33}%` }} />
           </div>
@@ -447,43 +538,6 @@ export default function SelfAssessmentForm() {
             )}
           </div>
         </form>
-        <div className="assessment-result-section">
-          <div className="assessment-result-header">
-            <span>Assessment Results</span>
-          </div>
-          <div className="assessment-result-body">
-            {loading && <p>Analyzing your symptoms...</p>}
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            {result && !result.error && (
-              <div>
-                <h3>Preliminary Analysis</h3>
-                <p>{result.analysis}</p>
-                {result.recommendations && (
-                  <>
-                    <h3>Recommendations</h3>
-                    <ul>
-                      {result.recommendations.map((rec, index) => (
-                        <li key={index}>{rec}</li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-                {result.urgency && (
-                  <div className={`urgency-level ${result.urgency.toLowerCase()}`}>
-                    <h3>Urgency Level: {result.urgency}</h3>
-                    <p>{result.urgencyExplanation}</p>
-                  </div>
-                )}
-              </div>
-            )}
-            {result && result.error && (
-              <div style={{ color: 'red' }}>{result.error}</div>
-            )}
-            {!loading && !result && !error && (
-              <p>Please complete the assessment. Results will appear here.</p>
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'accounts',
-    'risk_prediction',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'self_assessment',
     'appointments',
+    'risk_prediction',
 ]
 
 MIDDLEWARE = [

@@ -10,6 +10,7 @@ import RiskAssessmentPage from './Figma/RiskAssessment/RiskAssessment';
 import AssessmentEntry from './Figma/AssessmentEntry';
 import SelfAssessmentForm from './Figma/SelfAssessment/SelfAssessmentForm';
 import ProfilePage from './Figma/Profile Component/Profile';
+import SelfAssessmentResult from './Figma/SelfAssessment/SelfAssessmentResult';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/assessment-entry" element={<AssessmentEntry />} />
           <Route path="/self-assessment" element={<SelfAssessmentForm />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/self-assessment-result" element={<SelfAssessmentResult />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
