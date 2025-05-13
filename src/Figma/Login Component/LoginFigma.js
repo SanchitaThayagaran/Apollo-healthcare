@@ -23,11 +23,12 @@ function LoginPage() {
       localStorage.setItem('refresh', response.data.refresh);
       localStorage.setItem('user_id', response.data.user_id);
 
+      localStorage.setItem('role', response.data.role); // 'doctor' or 'patient'
       // Check user role and redirect to appropriate page
-      if (response.data.role === 'doctor') {
-        navigate('/appointments'); // Redirect to doctor dashboard
+      if (response.data.role === 'patient') {
+        navigate('/appointments'); 
       } else {
-        navigate('/medications'); // Redirect to patient dashboard
+        navigate('/medications'); 
       }
     } catch (error) {
       console.error('Login failed:', error);

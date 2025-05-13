@@ -31,7 +31,7 @@ class GoogleLoginView(APIView):
 
         # Step 4: Check role based on email domain or static list
         # For now, we assume doctors are from a predefined list of emails or domain
-        doctor_emails = ['doctor1@example.com', 'doctor2@example.com']  # Update with your actual doctor emails or logic
+        doctor_emails = ['doctor1@example.com', 'doctor2@example.com','vaishnavikashyap1804@gmail.com']  # Update with your actual doctor emails or logic
         role = 'doctor' if email in doctor_emails else 'patient'
 
         # Step 5: Get or create user in the database

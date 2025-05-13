@@ -1,6 +1,14 @@
 from django.contrib import admin
-from .models import CustomUser, PatientProfile
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
 
-# Register your models here.
-admin.site.register(CustomUser)
-admin.site.register(PatientProfile)
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    list_display  = ("username", "email", "role", "is_staff", "is_active")
+    list_editable = ("role",)
+    fieldsets     = UserAdmin.fieldsets + (
+        (None, {"fields": ("role",)}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {"fields": ("role",)}),
+    )
