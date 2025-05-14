@@ -103,13 +103,17 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-## 6. Run the Development Server
+## 6. Update OPEN_AI key 
+
+Update open ai key in .env file at `healthmanagement` for self assessments to work
+
+## 7. Run the Development Server
 
 ```
 python manage.py runserver
 ```
 
-## 7. API Usage
+## 8. API Usage
 
 - The risk prediction endpoint is available at:
   ```
@@ -128,7 +132,7 @@ python manage.py runserver
   }
   ```
 
-## 8. CORS
+## 9. CORS
 
 If you are using a frontend on a different port, make sure to configure CORS in `settings.py`:
 

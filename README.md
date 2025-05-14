@@ -11,7 +11,6 @@ The Healthcare Management System (HMS) is designed to digitize patient records a
 ## User Authentication and Role Management
 
 - Role-Based Access control
-- Password policies and security measures
 
 ## Appointment booking
 
