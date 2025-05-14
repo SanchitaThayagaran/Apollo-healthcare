@@ -38,6 +38,12 @@ class SelfAssessmentAPIView(APIView):
                 ai_content = response.choices[0].message.content
                 # Parse AI response for 'Analysis' and 'Recommendations'
                 analysis, recommendations = self.parse_analysis_and_recommendations(ai_content)
+                
+                # Update the assessment with analysis and recommendations
+                assessment.analysis = analysis
+                assessment.recommendations = recommendations
+                assessment.save()
+                
             except Exception as e:
                 tb = traceback.format_exc()
                 return Response({'error': f'OpenAI error: {str(e)}', 'traceback': tb}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

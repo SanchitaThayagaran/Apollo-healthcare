@@ -4,8 +4,8 @@ from .models import SelfAssessment
 class SelfAssessmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = SelfAssessment
-        fields = ['id', 'patient', 'submission_date', 'symptom_data']
-        read_only_fields = ['id', 'patient', 'submission_date']
+        fields = ['id', 'patient', 'submission_date', 'symptom_data', 'analysis', 'recommendations']
+        read_only_fields = ['id', 'patient', 'submission_date', 'analysis', 'recommendations']
 
     def validate_symptom_data(self, value):
         # Ensure personalInfo and symptoms are present
